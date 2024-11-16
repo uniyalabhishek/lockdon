@@ -2,7 +2,6 @@
 
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
-import crosshair from "/Users/jake/LockDon/lockdon/frontend/src/assets/crosshair.svg";
 import path from 'path';
 import fs from 'fs/promises';
 
@@ -29,7 +28,8 @@ interface Lock {
 export default function HitlistPage() {
   const router = useRouter();
   const [hits, setHits] = useState<Hit[]>([]);
-  const [tasks, setTasks] = useState<Lock[]>([]);
+  const [activeTasks, setActiveTasks] = useState<Lock[]>([]);
+  const [wastedTasks, setWastedTasks] = useState<Lock[]>([]);
 
   useEffect(() => {
     // Fetch hits from your smart contract
@@ -43,15 +43,27 @@ export default function HitlistPage() {
       }
     };
 
-    // Add new function to fetch locks data from the API
     const fetchTasks = async () => {
       try {
         const response = await fetch('/api/locks');
-        if (!response.ok) {
-          throw new Error('Failed to fetch tasks');
-        }
-        const data = await response.json();
-        setTasks(data);
+        const allTasks = await response.json();
+        
+        const now = new Date();
+        // Split tasks based on due date
+        const active: Lock[] = [];
+        const wasted: Lock[] = [];
+        
+        allTasks.forEach((task: Lock) => {
+          const dueDate = new Date(task.date);
+          if (dueDate > now) {
+            active.push(task);
+          } else {
+            wasted.push(task);
+          }
+        });
+
+        setActiveTasks(active);
+        setWastedTasks(wasted);
       } catch (error) {
         console.error('Error fetching tasks:', error);
       }
@@ -60,6 +72,60 @@ export default function HitlistPage() {
     fetchHits();
     fetchTasks();
   }, []);
+
+  const handleUpdateProof = (taskId: number) => {
+    // TODO: Implement proof update logic
+    console.log('Update proof for task:', taskId);
+  };
+
+  const TaskTable = ({ tasks, isWasted = false }) => (
+    <div className="overflow-x-auto">
+      <table className="w-full border-collapse">
+        <thead>
+          <tr className="border-b border-zinc-700">
+            <th className="lock-don-text text-left p-4">PROOF TYPE</th>
+            <th className="lock-don-text text-left p-4">TARGET</th>
+            <th className="lock-don-text text-left p-4">QUANTITY</th>
+            <th className="lock-don-text text-left p-4">{isWasted ? 'DONATION' : 'LOCK AMOUNT'} (ETH)</th>
+            <th className="lock-don-text text-left p-4">DUE DATE</th>
+            {!isWasted && <th className="lock-don-text text-left p-4">ACTIONS</th>}
+          </tr>
+        </thead>
+        <tbody>
+          {tasks.length > 0 ? (
+            tasks.map((task, index) => (
+              <tr 
+                key={index} 
+                className="border-b border-zinc-700 hover:bg-zinc-900"
+              >
+                <td className="p-4 text-green-500">{task.proofType}</td>
+                <td className="p-4">{task.target}</td>
+                <td className="p-4">{task.amount}</td>
+                <td className="p-4">{task.lockAmount}</td>
+                <td className="p-4">{new Date(task.date).toLocaleDateString()}</td>
+                {!isWasted && (
+                  <td className="p-4">
+                    <button
+                      onClick={() => handleUpdateProof(task.id)}
+                      className="bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-md text-sm font-medium transition-colors duration-200"
+                    >
+                      Update Proof
+                    </button>
+                  </td>
+                )}
+              </tr>
+            ))
+          ) : (
+            <tr>
+              <td colSpan={isWasted ? 5 : 6} className="p-4 text-center text-zinc-500">
+                No tasks available
+              </td>
+            </tr>
+          )}
+        </tbody>
+      </table>
+    </div>
+  );
 
   return (
     <div className="container mx-auto px-4 py-8">
@@ -94,44 +160,14 @@ export default function HitlistPage() {
         ))}
       </div>
 
-      {/* Tasks Table */}
       <div className="mt-12">
-        <h2 className="lock-don-text text-xl mb-4">ACTIVE TASKS ({tasks.length})</h2>
-        <div className="overflow-x-auto">
-          <table className="w-full border-collapse">
-            <thead>
-              <tr className="border-b border-zinc-700">
-                <th className="lock-don-text text-left p-4">TARGET</th>
-                <th className="lock-don-text text-left p-4">PROOF TYPE</th>
-                <th className="lock-don-text text-left p-4">AMOUNT (ETH)</th>
-                <th className="lock-don-text text-left p-4">LOCK AMOUNT (ETH)</th>
-                <th className="lock-don-text text-left p-4">DUE DATE</th>
-              </tr>
-            </thead>
-            <tbody>
-              {tasks.length > 0 ? (
-                tasks.map((task) => (
-                  <tr 
-                    key={task.id} 
-                    className="border-b border-zinc-700 hover:bg-zinc-900"
-                  >
-                    <td className="p-4">{task.target}</td>
-                    <td className="p-4 text-green-500">{task.proofType}</td>
-                    <td className="p-4">{task.amount}</td>
-                    <td className="p-4">{task.lockAmount}</td>
-                    <td className="p-4">{new Date(task.date).toLocaleDateString()}</td>
-                  </tr>
-                ))
-              ) : (
-                <tr>
-                  <td colSpan={5} className="p-4 text-center text-zinc-500">
-                    No tasks available
-                  </td>
-                </tr>
-              )}
-            </tbody>
-          </table>
-        </div>
+        <h2 className="lock-don-text text-xl mb-4">ACTIVE TASKS ({activeTasks.length})</h2>
+        <TaskTable tasks={activeTasks} />
+      </div>
+
+      <div className="mt-12">
+        <h2 className="lock-don-text text-xl mb-4 text-red-500">WASTED ({wastedTasks.length})</h2>
+        <TaskTable tasks={wastedTasks} isWasted={true} />
       </div>
     </div>
   );

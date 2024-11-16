@@ -43,5 +43,14 @@
     "email": "waaaaaa",
     "isGroupTarget": false,
     "lockAmount": "1"
+  },
+  {
+    "target": "Conquer World",
+    "proofType": "website",
+    "amount": "10",
+    "date": "2024-11-16",
+    "email": "ngmi@fail.com",
+    "isGroupTarget": true,
+    "lockAmount": "0.1"
   }
 ]
