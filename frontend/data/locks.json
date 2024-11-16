@@ -34,5 +34,14 @@
     "email": "hi@weed.com",
     "isGroupTarget": false,
     "lockAmount": "10000"
+  },
+  {
+    "target": "it broke",
+    "proofType": "email",
+    "amount": "0",
+    "date": "2024-11-18",
+    "email": "waaaaaa",
+    "isGroupTarget": false,
+    "lockAmount": "1"
   }
 ]

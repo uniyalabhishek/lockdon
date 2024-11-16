@@ -1,14 +1,20 @@
+import Image from 'next/image';
 import LockDonForm from "../components/LockDonForm";
-import Logo from "/Users/jake/LockDon/lockdon/frontend/src/assets/your-logo.svg";
 
 export default function Home() {
   return (
     <main className="min-h-screen flex flex-col items-center justify-center p-4">
-      <div className="w-full max-w-md flex flex-col items-center space-y-8">
-        <div className="text-center">
-          <Logo className="w-200 h-200 mx-auto" />
+      <div className="flex flex-col items-center space-y-0">
+        <div className="text-center mb-[-150px]">
+          <img 
+            src="/your-logo.svg"
+            alt="Logo"
+            className="w-[800px] h-[800px]"
+          />
         </div>
-        <LockDonForm />
+        <div className="flex justify-center w-full">
+          <LockDonForm />
+        </div>
       </div>
     </main>
   );
