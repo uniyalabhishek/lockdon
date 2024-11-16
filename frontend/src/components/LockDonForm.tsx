@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
+import WalletButton from './ui/WalletButton';
 
 interface LockData {
   target: string;

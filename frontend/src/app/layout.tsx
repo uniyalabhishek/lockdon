@@ -1,6 +1,8 @@
 import type { Metadata } from "next";
 import { ccDeadlineDreaded, ccDeadlineDreadedOpen } from './fonts';
 import "./globals.css";
+import Providers from '../components/Provider';
+import WalletButton from '../components/ui/WalletButton';
 
 export const metadata: Metadata = {
   title: "Lock Don",
@@ -15,7 +17,14 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={`${ccDeadlineDreaded.variable} ${ccDeadlineDreadedOpen.variable}`}>
-        {children}
+        <Providers>
+          <div className="p-4">
+            <div className="absolute top-4 right-4">
+              <WalletButton />
+            </div>
+            {children}
+          </div>
+        </Providers>
       </body>
     </html>
   );
