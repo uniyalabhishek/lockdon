@@ -11,6 +11,7 @@ interface LockData {
   email: string;
   isGroupTarget: boolean;
   lockAmount: string;
+  charityAddress: string;
 }
 
 export default function LockDonForm() {
@@ -24,23 +25,25 @@ export default function LockDonForm() {
   const [isGroupTarget, setIsGroupTarget] = useState(false);
   const [approvedAddresses, setApprovedAddresses] = useState('');
   const [lockAmount, setLockAmount] = useState('');
+  const [charityAddress, setCharityAddress] = useState('');
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     
-    if (!proofType || !amount || !date || !email || !target || !lockAmount) {
+    if (!proofType || !amount || !date || !email || !target || !lockAmount || !charityAddress) {
       alert('Please fill in all fields');
       return;
     }
 
-    const lockData = {
+    const lockData: LockData = {
       target,
       proofType,
       amount,
       date,
       email,
       isGroupTarget,
-      lockAmount
+      lockAmount,
+      charityAddress
     };
 
     try {
@@ -319,7 +322,14 @@ export default function LockDonForm() {
       </div>
 
       <div className="space-y-2">
-        
+        <label className="lock-don-text">CHARITY ADDRESS</label>
+        <input 
+          type="text" 
+          className="input-field"
+          placeholder="Enter charity wallet address"
+          value={charityAddress}
+          onChange={(e) => setCharityAddress(e.target.value)}
+        />
       </div>
 
       <div className="flex items-center gap-2">

@@ -52,5 +52,26 @@
     "email": "ngmi@fail.com",
     "isGroupTarget": true,
     "lockAmount": "0.1"
+  },
+  {
+    "target": "Contribute weekly",
+    "proofType": "github",
+    "amount": "20",
+    "date": "2024-11-24",
+    "email": "vitalik.eth@gmail.com",
+    "isGroupTarget": false,
+    "lockAmount": "10000"
+  },
+  {
+    "target": "Sleep",
+    "proofType": "github",
+    "amount": "1",
+    "date": "2024-11-17",
+    "email": "sleep@needed.com",
+    "isGroupTarget": false,
+    "lockAmount": "1",
+    "charityAddress": "Giveth.eth",
+    "id": 1731792620395,
+    "createdAt": "2024-11-16T21:30:20.395Z"
   }
 ]

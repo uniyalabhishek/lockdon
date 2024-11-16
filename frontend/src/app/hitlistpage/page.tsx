@@ -23,6 +23,7 @@ interface Lock {
   lockAmount: string;
   id: number;
   createdAt: string;
+  charityAddress: string;
 }
 
 export default function HitlistPage() {
@@ -87,6 +88,7 @@ export default function HitlistPage() {
             <th className="lock-don-text text-left p-4">TARGET</th>
             <th className="lock-don-text text-left p-4">QUANTITY</th>
             <th className="lock-don-text text-left p-4">{isWasted ? 'DONATION' : 'LOCK AMOUNT'} (ETH)</th>
+            <th className="lock-don-text text-left p-4">CHARITY ADDRESS</th>
             <th className="lock-don-text text-left p-4">DUE DATE</th>
             {!isWasted && <th className="lock-don-text text-left p-4">ACTIONS</th>}
           </tr>
@@ -102,6 +104,7 @@ export default function HitlistPage() {
                 <td className="p-4">{task.target}</td>
                 <td className="p-4">{task.amount}</td>
                 <td className="p-4">{task.lockAmount}</td>
+                <td className="p-4 font-mono text-sm">{task.charityAddress}</td>
                 <td className="p-4">{new Date(task.date).toLocaleDateString()}</td>
                 {!isWasted && (
                   <td className="p-4">
@@ -117,7 +120,7 @@ export default function HitlistPage() {
             ))
           ) : (
             <tr>
-              <td colSpan={isWasted ? 5 : 6} className="p-4 text-center text-zinc-500">
+              <td colSpan={isWasted ? 6 : 7} className="p-4 text-center text-zinc-500">
                 No tasks available
               </td>
             </tr>

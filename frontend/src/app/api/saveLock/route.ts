@@ -29,8 +29,14 @@ export async function POST(request: Request) {
       locks = [];
     }
     
-    // Add new lock
-    locks.push(newLock);
+    // Add new lock with timestamp and ID
+    const lockWithMetadata = {
+      ...newLock,  // This will include charityAddress from the form
+      id: Date.now(),
+      createdAt: new Date().toISOString()
+    };
+    
+    locks.push(lockWithMetadata);
     
     // Write updated locks back to file
     await writeFile(LOCKS_FILE, JSON.stringify(locks, null, 2));
